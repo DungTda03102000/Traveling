@@ -1,0 +1,72 @@
+﻿@model PagedList.IPagedList<ChieuTour.Models.Tour>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "search";
+    Layout = "~/Views/Shared/_LayoutClient.cshtml";
+}
+
+@{Html.RenderAction("ListDanhMuc", "DanhMuc");}
+<ul class="thumbnails">
+    @if (Model.Count == 0)
+    {
+        <h1 class="span9">Không tìm thấy kết quả!</h1>
+    }
+    else
+    {
+        using (Html.BeginForm("search", "Home", FormMethod.Get, new { @class = "form-inline navbar-search" }))
+        {
+            <div class="span9">
+                <input name="searchString" type="hidden" value="@ViewBag.Filter" />
+                Tìm theo khoảng giá từ
+                <input type="text" name="min" value="@ViewBag.Min" /> đến
+                <input type="text" name="max" value="@ViewBag.Max" />
+                <input type="submit" value="Tìm" />
+            </div>
+        }
+    }
+    @foreach (var item in Model)
+    {
+        <li class="span3">
+            <div class="thumbnail">
+                <a href="@Url.Action("Detail", "Tour", new { id = item.MaTour })"><img src="~/wwwroot/images/@item.Anh" alt="" style="width:260px; height:250px"/></a>
+                <div class="caption">
+                    <h5>@item.TenTour</h5>
+                    @if (item.GiamGia != 0)
+                    {
+                        double giaGiam = 0;
+                        giaGiam = (float)item.GiaNL * (1 - ((float)item.GiamGia / 100));
+                        @*<p style="text-decoration-line: line-through">@string.Format("{0:#,#}", item.GiaNL)</p>*@
+                        <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", giaGiam) vnđ</p>
+
+                    }
+                    else
+                    {
+                        <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", item.GiaNL) vnđ</p>
+                    }
+
+
+                <h4 style="text-align:center">
+                    <a class="btn" href="@Url.Action("Detail", "Tour", new { id = item.MaTour })"> <i class="icon-zoom-in"></i></a> @if (item.HoatDong == "Đang hoạt động")
+                    {
+                        <a class="btn" href="@Url.Action("ThemGiohang", "GioHang", new { @maTour = item.MaTour, @strURL = Request.Url.ToString() })">
+                            Thêm vào giỏ hàng <i class="icon-shopping-cart"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn" style="display: none" href="@Url.Action("ThemGiohang", "GioHang", new { @maTour = item.MaTour, @strURL = Request.Url.ToString() })">
+                            Thêm vào giỏ hàng <i class="icon-shopping-cart"></i>
+                        </a>
+                    }
+</div>
+            </div>
+        </li>
+    }
+</ul>
+<div style="float: right">
+    Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("search", new { page, filter = ViewBag.Filter, min = ViewBag.Min, max = ViewBag.Max }))
+</div>
+

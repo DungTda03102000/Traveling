@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutClient1.cshtml";
+}
+
+<div class="span9">
+    <div class="well well-small">
+        <h4>Tin tức mới</h4>
+        <div class="row-fluid">
+            <div id="featured" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <ul class="thumbnails">
+                            @foreach (var item in ViewBag.TT)
+                            {
+                                <li class="span3">
+                                    <div class="thumbnail">
+                                        <i class="tag"></i>
+                                        <a href="@Url.Action("Detail", "TinTuc", new { @id = item.MaTinTuc })"><img src="~/wwwroot/images/@item.HinhAnh" alt="@item.HinhAnh"></a>
+                                        <div class="caption">
+                                            <h5>@item.TieuDe</h5>
+                                            <h4><a class="btn" href="@Url.Action("Detail", "TinTuc", new { @id = item.MaTinTuc })">XEM</a></h4>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            }
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+            <h4>THỊNH HÀNH </h4>
+            <ul class="thumbnails">
+                @foreach (var item in ViewBag.top6)
+                {
+                    <li class="span3">
+                        <div class="thumbnail">
+                            <a href="@Url.Action("Detail", "Tour", new { id = item.tour.MaTour })"><img src="~/wwwroot/images/@item.tour.Anh" alt="" style="width:260px; height:250px" /></a>
+                            <div class="caption">
+                                <h5>@item.tour.TenTour</h5>
+                                @if (item.tour.GiamGia != 0)
+                                {
+                                    double giaGiam = 0;
+                                    giaGiam = (float)item.tour.GiaNL * (1 - ((float)item.tour.GiamGia / 100));
+                                    @*<p style="text-decoration-line: line-through">@string.Format("{0:#,#}", item.tour.GiaNL) vnđ</p>*@
+                                    <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", giaGiam) vnđ</p>
+
+                                }
+                                else
+                                {
+                                    
+                                    <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", item.tour.GiaNL) vnđ</p>
+                                }
+
+
+                            <h4 style="text-align:center">
+                                <a class="btn" href="@Url.Action("Detail", "Tour", new { id = item.tour.MaTour })"> <i class="icon-zoom-in"></i></a> 
+                                @if (item.tour.HoatDong == "Đang hoạt động")
+                                {
+                                    <a class="btn" href="@Url.Action("ThemGiohang", "GioHang", new { @maTour = item.tour.MaTour, @strURL = Request.Url.ToString() })">
+                                        Thêm vào giỏ hàng <i class="icon-shopping-cart"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn" style="display: none" href="@Url.Action("ThemGiohang", "GioHang", new { @maTour = item.tour.MaTour, @strURL = Request.Url.ToString() })">
+                                        Thêm vào giỏ hàng <i class="icon-shopping-cart"></i>
+                                    </a>
+                                }
+                            </h4>
+                            </div>
+                        </div>
+                    </li>
+                }
+
+            </ul>
+</div>
+
+

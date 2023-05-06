@@ -1,0 +1,86 @@
+﻿@model ChieuTour.Models.Tour
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutClient.cshtml";
+}
+<div class="span2"></div>
+<div class="span9">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")">TRANG CHỦ</a> <span class="divider">/</span></li>
+        <li><a href="@Url.Action("Index", "DanhMuc", new { id = Model.MaDanhMuc })">CHƯƠNG TRÌNH TOUR</a> <span class="divider">/</span></li>
+        <li class="active">THÔNG TIN TOUR</li>
+    </ul>
+    <div class="row">
+        <div id="gallery" class="span3">
+            <img src="~/wwwroot/images/@Model.Anh" style="width:100%" alt="@Model.Anh" />                                
+        </div>
+        <div class="span6">
+            <h3>@Model.TenTour</h3> 
+            <small>- @Model.HoatDong</small>
+            <hr class="soft" />
+            <form class="form-horizontal qtyFrm">
+                <div class="control-group">
+
+                    @if (Model.GiamGia != 0)
+                    {
+                        double giaGiam = 0;
+                        giaGiam = (float)Model.GiaNL * (1 - ((float)Model.GiamGia / 100));
+                        <label>Giá người lớn</label>
+                        <p style="text-decoration-line: line-through">@string.Format("{0:#,#}", Model.GiaNL) vnđ</p>
+                        <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", giaGiam) vnđ</p>
+                        <label>Giá trẻ em</label>
+                        double giaGiamTE = 0;
+                        giaGiamTE = (float)Model.GiaTE * (1 - ((float)Model.GiamGia / 100));
+
+                        <p style="text-decoration-line: line-through">@string.Format("{0:#,#}", Model.GiaTE) vnđ</p>
+                        <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", giaGiamTE) vnđ</p>
+
+                    }
+                    else
+                    {
+                        <label>Giá người lớn</label>
+                        <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", Model.GiaNL) vnđ</p>
+                        <label>Giá trẻ em</label>
+                        <p style="color: red; font-size: large; font-weight: bold">@string.Format("{0:#,#}", Model.GiaTE) vnđ</p>
+                    }
+                <div class="controls">
+                    @if (Model.HoatDong == "Đang hoạt động")
+                    {
+                        <a class="btn btn-large btn-primary pull-right" href="@Url.Action("ThemGiohang", "GioHang", new { @maTour = Model.MaTour, @strURL = Request.Url.ToString() })">
+                            Thêm vào giỏ hàng <i class="icon-shopping-cart"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn" style="display: none" href="@Url.Action("ThemGiohang", "GioHang", new { @maTour = Model.MaTour, @strURL = Request.Url.ToString() })">
+                            Thêm vào giỏ hàng <i class="icon-shopping-cart"></i>
+                        </a>
+                    }
+                </div>
+                </div>
+            </form>                     
+            <hr class="soft clr" />
+            <p>
+                @Model.MoTa
+
+            </p>
+            <a class="btn btn-small pull-right" href="#detail">Xem thêm</a>
+            <br class="clr" />
+            <a href="#" name="detail"></a>
+            <hr class="soft" />
+        </div>
+
+        <div class="span9">
+            <ul id="productDetail" class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">Lịch trình</a></li>               
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="home">
+                    @Html.Raw(Model.LichTrinh)
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
